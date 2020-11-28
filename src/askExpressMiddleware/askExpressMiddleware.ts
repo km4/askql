@@ -1,17 +1,15 @@
 import { NextFunction } from 'express';
 import { runUntyped, Resources, Values } from '../askvm';
-import { parse } from '../askscript';
+import { parse as parseCode } from '../askcode';
+import { parse as parseScript } from '../askscript';
 import { Request, Response } from 'express';
 
-function getParsedCode(requestBody: { [key: string]: string }) {
-  const code = requestBody.code;
-
-  if (typeof code !== 'string')
-    throw new Error('Missing code in request body!');
-
-  let parsedCode = parse(code);
-
-  return parsedCode;
+function parse(code: string, parser: Function) {
+  try {
+    return parser(code);
+  } catch (e) {
+    return false;
+  }
 }
 
 export function askExpressMiddleware(
@@ -27,17 +25,23 @@ export function askExpressMiddleware(
     next: NextFunction
   ) {
     try {
-      const parsedCode = getParsedCode(request.body);
+      const code = request.body.code;
+      let parsedCode = parse(code, parseCode);
+      if (!parsedCode) {
+        parsedCode = parse(code, parseScript);
+      }
       const queryResponse = await runUntyped(environment, parsedCode);
       response.json(queryResponse);
-
-      if (config.callNext) {
-        return next();
-      }
     } catch (err) {
-      config.passError && next(err);
-      return;
+      if (config.passError) {
+        return next(err);
+      }
     }
+
+    if (config.callNext) {
+      return next();
+    }
+
     return;
   };
 }
