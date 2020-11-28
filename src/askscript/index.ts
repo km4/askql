@@ -24,7 +24,6 @@ export function parseToAst(
   debugPrint?: boolean
 ): AskScriptAst {
   const parser: any = require('./parser/askscript.grammar');
-
   try {
     // @ts-ignore PEG.parse accepts second argument
     const ast = parser.parse(code, options);

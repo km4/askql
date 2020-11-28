@@ -1,1 +1,1 @@
-export { objectExtend } from './objectExtend';
+export { objectExtend } from '../object/objectExtend';

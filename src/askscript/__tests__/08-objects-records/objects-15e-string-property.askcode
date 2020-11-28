@@ -1,1 +1,0 @@
-ask(object('a text with some spaces',call(get('true'))))

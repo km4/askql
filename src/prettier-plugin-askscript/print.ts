@@ -32,13 +32,7 @@ export function print(
     }
     const contents: Doc[] = [];
     for (const key in value) {
-      contents.push(
-        concat([
-          key.includes(' ') ? `'${key}'` : key,
-          ': ',
-          path.call(print, 'jsxValue', key),
-        ])
-      );
+      contents.push(concat([key, ': ', path.call(print, 'jsxValue', key)]));
     }
     return concat(['{', join(', ', contents), '}']);
   }

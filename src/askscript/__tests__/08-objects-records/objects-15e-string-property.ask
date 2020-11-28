@@ -1,5 +1,0 @@
-ask {
-    {
-        'a text with some spaces': true
-    }
-}
