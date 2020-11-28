@@ -1,5 +1,6 @@
 import { promises as pfs } from 'fs';
 import { pick } from 'lodash';
+import fs from 'fs';
 
 import packageJson from '../package.json';
 
